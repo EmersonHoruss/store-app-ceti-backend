@@ -26,10 +26,9 @@ export default {
 
   addStock: async (req, res) => {
     const { _id, _addedAmount } = req.body;
-
     const _entity = await Entity.findById(_id)
-    
-    const _amount = _addedAmount + _entity._amount
+
+    const _amount = parseInt(_addedAmount) + parseInt(_entity._amount)
 
     const _savedEntity = await Entity.findByIdAndUpdate(
       _id,
