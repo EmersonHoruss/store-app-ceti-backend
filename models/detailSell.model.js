@@ -1,39 +1,26 @@
+import { DetailSellSchema } from "../schemas/detailSell.schema.js"
 import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId
 
-const schema = new mongoose.Schema(
-  {
-    _amount: {
-      type: Number,
-      unique: false,
-      required: true,
+export const DetailSellModel = {
+    async create(
+        _amount,
+        _price,
+        _idProduct,
+        _idSell
+    ) {
+        const _total = parseFloat(_price) * parseInt(_amount)
+        const _detailSell = new DetailSellSchema({
+            _amount,
+            _total,
+            _price,
+            _idProduct,
+            _idSell
+        });
+        return await _detailSell.save();
     },
-    _total: {
-      type: Number,
-      unique: false,
-      required: true,
-    },
-    _price: {
-      type: Number,
-      unique: false,
-      required: true,
-    },
-    _idProduct: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      unique: false,
-      required: true,
-    },
-    _idSell: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Sell",
-      unique: false,
-      required: true,
+
+    async getByIdSeller(_idSell) {
+        return await DetailSellSchema.find({ _idSell: ObjectId(_idSell) })
     }
-  },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
-);
-
-export default mongoose.model("DetailSell", schema);
+}

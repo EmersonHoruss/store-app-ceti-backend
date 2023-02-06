@@ -1,41 +1,36 @@
-import Entity from "../models/product.model.js";
+import { ProductModel } from "../models/product.model.js";
 
 export default {
   create: async (req, res) => {
     try {
       const { _name, _amount, _price } = req.body;
-      const entity = new Entity({
-        _name,
-        _amount,
-        _price
-      });
 
-      const savedEntity = await entity.save();
+      const _savedProduct = await ProductModel.create(_name, _amount, _price)
 
-      res.status(200).json(savedEntity);
+      res.json(_savedProduct);
     } catch (error) {
-      console.log(error);
       return res.status(500).json(error);
     }
   },
 
-  read: async (req, res) => {
-    const entities = await Entity.find();
-    return res.json(entities);
+  get: async (req, res) => {
+    try {
+      const _entities = await ProductModel.get()
+      return res.json(_entities);
+    } catch (error) {
+      return res.status(500).json(error)
+    }
   },
 
   addStock: async (req, res) => {
-    const { _id, _addedAmount } = req.body;
-    const _entity = await Entity.findById(_id)
+    try {
+      const { _id, _addedAmount } = req.body;
+      
+      const _savedEntity = await ProductModel.addStock(_id, _addedAmount);
 
-    const _amount = parseInt(_addedAmount) + parseInt(_entity._amount)
-
-    const _savedEntity = await Entity.findByIdAndUpdate(
-      _id,
-      { $set: { _amount } },
-      { new: true }
-    );
-    res.status(200).json(_savedEntity);
+      res.json(_savedEntity);
+    } catch (error) {
+      res.status(500).json(error)
+    }
   },
 };
-

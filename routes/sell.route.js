@@ -7,9 +7,9 @@ const router = Router();
 router.post("/", _controller.create);
 
 // Read
-router.get("/", _controller.read);
+router.get("/", _controller.get);
 
-// Read
-router.get("/:_id", _controller.readOne);
+// Read one
+router.get("/:_id", _controller.getOne);
 
 export default router;

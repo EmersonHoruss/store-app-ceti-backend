@@ -1,27 +1,44 @@
-import mongoose from "mongoose";
+import { ProductSchema } from "../schemas/product.schema.js"
 
-const schema = new mongoose.Schema(
-  {
-    _name: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    _amount: {
-      type: Number,
-      unique: false,
-      required: true,
-    },
-    _price: {
-      type: Number,
-      unique: false,
-      required: true,
-    },
+export const ProductModel = {
+  async create(_name, _amount, _price) {
+    const entity = new ProductSchema({
+      _name,
+      _amount,
+      _price
+    });
+
+    return await entity.save();
   },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
-);
 
-export default mongoose.model("Product", schema);
+  async get() {
+    return await ProductSchema.find()
+  },
+
+  async addStock(_id, _addedAmount) {
+    const _product = await ProductSchema.findById(_id)
+    const _amount = _product._amount + parseInt(_addedAmount)
+
+    return await ProductSchema.findByIdAndUpdate(
+      _id,
+      { $set: { _amount } },
+      { new: true }
+    );
+  },
+
+  async subtractStock(_id, _subtractedAmount) {
+    const _product = await ProductSchema.findById(_id)
+
+    const _amount = _product._amount - parseInt(_subtractedAmount)
+
+    return await ProductSchema.findByIdAndUpdate(
+      _id,
+      { $set: { _amount } },
+      { new: true }
+    );
+  },
+
+  async getOne(_id) {
+    return await ProductSchema.findById(_id)
+  }
+}

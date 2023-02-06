@@ -1,32 +1,32 @@
-import mongoose from "mongoose";
+import { SellSchema } from "../schemas/sell.schema.js"
 
-const schema = new mongoose.Schema(
-  {
-    _date: {
-      type: Date,
-      unique: false,
-      required: true,
+export const SellModel = {
+    getTotal(_detailSells) {
+        let _total = 0
+        for (let i = 0; i < _detailSells.length; i++) {
+            const { _amount, _price } = _detailSells[i]
+            _total += _amount * _price
+        }
+        return _total
     },
-    _total: {
-      type: Number,
-      unique: false,
-      required: true,
-    },
-    _customerName: {
-      type: String,
-      unique: false,
-      required: true,
-    },
-    _customerDNI: {
-        type: String,
-        unique: false,
-        required: true,
-    },
-  },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
-);
 
-export default mongoose.model("Sell", schema);
+    async create(_date, _customerName, _customerDNI, _detailSells) {
+        const _total = this.getTotal(_detailSells)
+        const _sell = new SellSchema({
+            _date,
+            _total,
+            _customerName,
+            _customerDNI
+        });
+
+        return await _sell.save();
+    },
+
+    async get() {
+        return await SellSchema.find()
+    },
+
+    async getOne(_id) {
+        return await SellSchema.findById(_id).exec()
+    }
+}
