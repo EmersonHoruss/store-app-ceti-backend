@@ -7,7 +7,7 @@ export default {
 
       const _savedProduct = await ProductModel.create(_name, _amount, _price)
 
-      res.json(_savedProduct);
+      res.status(200).json(_savedProduct);
     } catch (error) {
       return res.status(500).json(error);
     }
@@ -16,7 +16,8 @@ export default {
   get: async (req, res) => {
     try {
       const _products = await ProductModel.get()
-      return res.json(_products);
+
+      return res.status(200).json(_products);
     } catch (error) {
       return res.status(500).json(error)
     }
@@ -28,7 +29,19 @@ export default {
 
       const _savedProduct = await ProductModel.addStock(_id, _addedAmount);
 
-      res.json(_savedProduct);
+      res.status(200).json(_savedProduct);
+    } catch (error) {
+      res.status(500).json(error)
+    }
+  },
+
+  getOne: async (req, res) => {
+    try {
+      const { _id } = req.params
+
+      const _product = await ProductModel.getOne(_id)
+
+      res.status(200).json(_product)
     } catch (error) {
       res.status(500).json(error)
     }
@@ -37,12 +50,12 @@ export default {
   update: async (req, res) => {
     try {
       const { _id, _name, _price } = req.body;
-      
+
       const _savedProduct = await ProductModel.update(_id, _name, _price)
 
-      res.json(_savedProduct)
+      res.status(200).json(_savedProduct)
     } catch (error) {
       res.status(500).json(error)
     }
-  }
+  },
 };
