@@ -40,5 +40,15 @@ export const ProductModel = {
 
   async getOne(_id) {
     return await ProductSchema.findById(_id)
+  },
+
+  async update(_id, _name, _price) {
+    let _castedPrice = parseFloat(_price)
+    await ProductSchema.findByIdAndUpdate(
+      _id,
+      { _name, _price: _castedPrice }
+    )
+
+    return await ProductSchema.findById(_id)
   }
 }

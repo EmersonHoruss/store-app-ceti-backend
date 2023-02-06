@@ -12,4 +12,7 @@ router.get("/", _controller.get);
 // Add Stock
 router.put("/addStock", _controller.addStock)
 
+// Update
+router.put("/", _controller.update);
+
 export default router;
